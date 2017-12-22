@@ -269,6 +269,34 @@ public class WebService extends HttpServlet {
 
 		return ind;
 	}
+	
+		public void selectVMTProfile() throws NbaBaseException {
+
+		Date startTime = Calendar.getInstance().getTime();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = NbaConnectionManager.borrowConnection(NbaConfigurationConstants.NBA_UX);
+			stmt = conn
+					.prepareStatement("SELECT USER_ID,USER_PROFILE,USER_ROLE FROM BOOK_OF_BUSINESS WHERE USER_ROLE not in ('NBUNDWRT','NBEUNDWR','NBUNSUPR','NBEUNSUP') ");
+			stmt.executeUpdate();
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				Clob clob = rs.getClob("USER_PROFILE");
+//				System.out.println("Profile for User " + rs.getString("USER_ID") + " is " + clobToString(clob));
+				updateVMTProfile(clobToString(clob), rs.getString("USER_ID"), rs.getString("USER_ROLE"));
+
+			}
+		} catch (Exception ex) {
+			getLogger().logException("During UPDATE for BOOK_OF_BUSINESS", ex);
+			throw new NbaBaseException(ex);
+		} finally {
+			NbaDatabaseUtils.closeStatement(stmt, startTime, "UPDATE for BOOK_OF_BUSINESS");
+			NbaDatabaseUtils.logElapsedTime(startTime);
+			NbaDatabaseUtils.returnDBconnection(conn, NbaConfigurationConstants.NBA_UX);
+		}
+	}
 
 
 }
