@@ -123,11 +123,11 @@ public class WebService extends HttpServlet {
 
                     String workstationID = request.getRemoteHost();
                     
-                    if(workstationID.equals("127.0.0.1")){
+                    if(workstationID.equals("127.0.0.2")){
                         try{
                             workstationID = InetAddress.getLocalHost().getHostName();
                         } catch (Exception ex){
-                            workstationID = "LOCALHOS";
+                            workstationID = "LOCALHOST";
                         }
                     }
                     if(workstationID.length() > 8)
