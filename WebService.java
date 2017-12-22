@@ -234,5 +234,41 @@ public class WebService extends HttpServlet {
             this.currentComponentList = currentComponentList;
         }
     }
+    
+    private static int insertRecordsForCensusTable(PreparedStatement prepStmt, Row nextRowEntry, java.sql.Date date, String employername,
+			boolean faceAmountIndicator) throws Exception {
+		int ind = 1;
+		try {
+			prepStmt.setString(1, GUIDFactory.getIdHexString());
+			prepStmt.setDate(2, date);
+			prepStmt.setString(3, nextRowEntry.getCell(5).toString());
+			prepStmt.setString(4, nextRowEntry.getCell(6).toString());
+			prepStmt.setString(5, nextRowEntry.getCell(7).toString().replace("-", ""));
+			prepStmt.setString(6, employername.toUpperCase().trim());
+			prepStmt.setString(7, "0");
+			prepStmt.setDate(8, new java.sql.Date(new Date().getTime()));// 04-Mar-1978"/* 1969-04-14
+			if (faceAmountIndicator) {
+				if (((!NbaUtils.isBlankOrNull(nextRowEntry.getCell(11).toString()) || (!NbaUtils.isBlankOrNull(nextRowEntry.getCell(12).toString()))))) {
+					prepStmt.setString(9, nextRowEntry.getCell(11).toString());
+					prepStmt.setString(10, nextRowEntry.getCell(12).toString());
+				} else {
+					throw new Exception("Please enter either the New Face Amount or Current Face Amount");
+				}
+
+			} else {
+				prepStmt.setString(9, null);
+				prepStmt.setString(10, null);
+			}
+			prepStmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			ind = nextRowEntry.getRowNum();
+			throw new Exception("nextRowEntry For Census Table: ");
+		}
+
+		return ind;
+	}
+
 
 }
