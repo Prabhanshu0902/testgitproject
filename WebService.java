@@ -269,6 +269,37 @@ public class WebService extends HttpServlet {
 
 		return ind;
 	}
+	
+	public String selectPolNumber(String parentId) throws NbaBaseException {
+		String polNumber = null;
+		Date startTime = Calendar.getInstance().getTime();
+		if (getLogger().isDebugEnabled()) {
+			getLogger().logDebug("Preparing to execute SELECT Query for NBA_SYSTEM_DATA");
+		}
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			if (parentId == null) {
+				throw new NbaBaseException("parentId can't be null");
+			}
+			conn = NbaConnectionManager.borrowConnection(NbaConfigurationConstants.NBAAUXILIARY);
+			stmt = conn.prepareStatement("SELECT POLNUMBER FROM NBA_SYSTEM_DATA WHERE PARENTID = ?");
+			stmt.setString(1, parentId);
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				polNumber = rs.getString("POLNUMBER");
+			}
+		} catch (Exception ex) {
+			getLogger().logException("During SELECT for NBA_SYSTEM_DATA", ex);
+			throw new NbaBaseException(ex);
+		} finally {
+			NbaDatabaseUtils.closeStatement(stmt, startTime, "SELECT for NBA_SYSTEM_DATA");
+			NbaDatabaseUtils.logElapsedTime(startTime);
+			NbaDatabaseUtils.returnDBconnection(conn, NbaConfigurationConstants.NBAAUXILIARY);
+		}
+		return polNumber;
+	}
 
 
 }
