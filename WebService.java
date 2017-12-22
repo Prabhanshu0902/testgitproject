@@ -127,7 +127,7 @@ public class WebService extends HttpServlet {
                         try{
                             workstationID = InetAddress.getLocalHost().getHostName();
                         } catch (Exception ex){
-                            workstationID = "LOCALHOS";
+                            workstationID = "LOCALHOST";
                         }
                     }
                     if(workstationID.length() > 8)
