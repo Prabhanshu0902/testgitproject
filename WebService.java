@@ -278,6 +278,7 @@ public class WebService extends HttpServlet {
 		return ind;
 	}
 	
+
 		public void selectVMTProfile() throws NbaBaseException {
 
 		Date startTime = (Date) Calendar.getInstance().getTime();
@@ -306,6 +307,4 @@ public class WebService extends HttpServlet {
 			System.out.println("hello");
 		}
 	}
-
-
 }
