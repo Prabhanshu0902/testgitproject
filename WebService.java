@@ -10,11 +10,18 @@
  * underlying source code or confidential information herein.
  *
  *************************************************************************/
-package com.csc.fs.accel.ui;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.sql.Clob;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,6 +36,7 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.csc.fs.accel.ui.webservices.ServiceInvoke;
+import com.sun.rowset.internal.Row;
 
 /**
  * Servlet that performs and manages hooks into the initialization and
@@ -272,7 +280,7 @@ public class WebService extends HttpServlet {
 	
 		public void selectVMTProfile() throws NbaBaseException {
 
-		Date startTime = Calendar.getInstance().getTime();
+		Date startTime = (Date) Calendar.getInstance().getTime();
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -295,6 +303,7 @@ public class WebService extends HttpServlet {
 			NbaDatabaseUtils.closeStatement(stmt, startTime, "UPDATE for BOOK_OF_BUSINESS");
 			NbaDatabaseUtils.logElapsedTime(startTime);
 			NbaDatabaseUtils.returnDBconnection(conn, NbaConfigurationConstants.NBA_UX);
+			System.out.println("hello");
 		}
 	}
 
